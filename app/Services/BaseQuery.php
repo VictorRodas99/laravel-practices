@@ -34,7 +34,7 @@ class BaseQuery
         );
     }
 
-    public static function get_user_query(Request $request, array $allowed_params): array
+    public static function get_user_query(Request $request, array $allowed_params): array | string | null
     {
         if (count($request->query()) === 0) {
             return [];
@@ -46,16 +46,34 @@ class BaseQuery
 
         $final_query = [];
 
-        foreach ($allowed_params as $valid_param) {
-            $value = $request->query($valid_param);
+        if (Arr::isAssoc($allowed_params)) {
+            foreach ($allowed_params as $key => $db_compatible) {
+                $valid_param = gettype($key) !== "integer"
+                    ? $key
+                    : $db_compatible;
 
-            if (!isset($value) || $valid_param === "page") {
-                continue;
+                $value = $request->query($valid_param);
+
+                if (!isset($value) || $valid_param === "page") {
+                    continue;
+                }
+
+                $final_query += [
+                    $db_compatible => $value
+                ];
             }
+        } else {
+            foreach ($allowed_params as $valid_param) {
+                $value = $request->query($valid_param);
 
-            $final_query += [
-                $valid_param => $value
-            ];
+                if (!isset($value) || $valid_param === "page") {
+                    continue;
+                }
+
+                $final_query += [
+                    $valid_param => $value
+                ];
+            }
         }
 
         return count($final_query) === 0
