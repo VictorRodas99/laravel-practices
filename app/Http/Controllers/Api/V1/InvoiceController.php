@@ -18,8 +18,8 @@ class InvoiceController extends Controller
      */
     public function index(Request $request)
     {
-        $query = InvoiceQuery::get_user_query($request, InvoiceQuery::EXPECTED_PARAMS);
-        
+        $query = (new InvoiceQuery)->get_user_query($request, InvoiceQuery::EXPECTED_PARAMS);
+
         if (count($query) === 0) {
             return InvoiceResource::collection(Invoice::paginate());
         }
@@ -31,7 +31,7 @@ class InvoiceController extends Controller
         $results = (new InvoiceQuery)->get_query_result($query);
 
         /* No results for valid query */
-        if (array_key_exists(InvoiceQuery::NO_DATA, $results)) {
+        if (array_key_exists(InvoiceQuery::NO_DATA, $results->toArray())) {
             return response($results, 404);
         }
 
