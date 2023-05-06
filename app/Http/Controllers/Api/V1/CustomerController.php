@@ -18,10 +18,13 @@ class CustomerController extends Controller
      */
     public function index(Request $request)
     {
-        $query = CustomerQuery::get_user_query($request, CustomerQuery::EXPECTED_PARAMS);
+        $query = (new CustomerQuery)->get_user_query($request, CustomerQuery::EXPECTED_PARAMS);
+        $include_invoices = $request->query('includeInvoices');
 
         if (count($query) === 0) {
-            return new CustomerCollection(Customer::paginate()); // This use ResourceClass Collections to transform all given data into a given format
+            return $include_invoices
+                ? new CustomerCollection(Customer::with('invoice')->paginate())
+                : new CustomerCollection(Customer::paginate()); // This use ResourceClass Collections to transform all given data into a given format
         }
 
         /* Invalid query  */
@@ -32,8 +35,12 @@ class CustomerController extends Controller
         $results = (new CustomerQuery)->get_query_result($query);
 
         /* No results for valid query */
-        if (array_key_exists(CustomerQuery::NO_DATA, $results)) {
+        if (array_key_exists(CustomerQuery::NO_DATA, $results->toArray())) {
             return response($results, 404);
+        }
+
+        if ($include_invoices) {
+            $results = $results->with('invoices');
         }
 
         return new CustomerCollection(CustomerQuery::paginate($results));
@@ -52,6 +59,12 @@ class CustomerController extends Controller
      */
     public function show(Customer $customer)
     {
+        $include_invoices = request()->query("includeInvoices");
+
+        if ($include_invoices) {
+            return new CustomerResource($customer->loadMissing("invoice"));
+        }
+
         return new CustomerResource($customer);
     }
 
