@@ -15,10 +15,12 @@ class BaseQuery
     const NO_DATA = "Message";
 
     protected $Model;
+    protected $independent_params;
 
-    public function __construct(Model $Model)
+    public function __construct(Model $Model, array $independent_params = [])
     {
         $this->Model = $Model;
+        $this->independent_params = $independent_params;
     }
 
     public static function paginate($items, $per_page = 5, $page = null, $options = [])
@@ -34,7 +36,7 @@ class BaseQuery
         );
     }
 
-    public static function get_user_query(Request $request, array $allowed_params): array
+    public function get_user_query(Request $request, array $allowed_params): array
     {
         if (count($request->query()) === 0) {
             return [];
@@ -76,16 +78,30 @@ class BaseQuery
             }
         }
 
-        return count($final_query) === 0
+        $exists_independent_params = false;
+        $raw_queries = array_keys($request->query());
+
+        foreach ($this->independent_params as $independent_param) {
+            if (in_array($independent_param, $raw_queries)) {
+                $exists_independent_params = true;
+                break;
+            }
+        }
+
+        return count($final_query) === 0 && !$exists_independent_params
             ? $error_message
             : $final_query;
     }
 
-    public function get_query_result(array $query): array
+    public function get_query_result(array $query): Collection
     {
         $final_values = [];
 
         foreach ($query as $param => $value) {
+            if (in_array($param, $this->independent_params)) {
+                continue;
+            }
+
             $db_query_result = $this->Model::where($param, $value)->get();
             array_push($final_values, $db_query_result);
         }
@@ -125,6 +141,6 @@ class BaseQuery
             ];
         }
 
-        return $final_values;
+        return collect($final_values);
     }
 }
