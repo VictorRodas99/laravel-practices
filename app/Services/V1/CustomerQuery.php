@@ -18,6 +18,6 @@ class CustomerQuery extends BaseQuery
 
     public function __construct()
     {
-        parent::__construct(new Customer());
+        parent::__construct(new Customer(), ["includeInvoices"]);
     }
 }
