@@ -34,7 +34,7 @@ class BaseQuery
         );
     }
 
-    public static function get_user_query(Request $request, array $allowed_params): array | string | null
+    public static function get_user_query(Request $request, array $allowed_params): array
     {
         if (count($request->query()) === 0) {
             return [];
@@ -91,9 +91,30 @@ class BaseQuery
         }
 
         $raw_values = Arr::flatten($final_values);
+        $filtered_values = [];
+
+        if (count($query) > 1) {
+            // Implement AND operator (filter elements that does not meet every condition of the query)
+            foreach ($raw_values as $db_result) {
+                foreach ($query as $param => $value) {
+                    $meet_condition = $db_result[$param] == $value;
+
+                    if (!$meet_condition) {
+                        $filtered_values = array_filter(
+                            $raw_values,
+                            fn ($e) => $e !== $db_result
+                        );
+
+                        $raw_values = $filtered_values;
+                    }
+                }
+            }
+        } else {
+            $filtered_values = $raw_values;
+        }
 
         // Get unique values parsing everything into strings and set uniques
-        $stringify_values = collect(array_map(fn ($value) => json_encode($value), $raw_values));
+        $stringify_values = collect(array_map(fn ($value) => json_encode($value), $filtered_values));
         $stringify_values = $stringify_values->unique()->values()->all();
 
         $final_values = array_map(fn ($value) => json_decode($value), $stringify_values);
