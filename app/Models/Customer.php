@@ -11,6 +11,7 @@ class Customer extends Model
 
     // For security purposes (indicate what columns are editable)
     protected $fillable = [
+        "id",
         "name",
         "type",
         "email",
