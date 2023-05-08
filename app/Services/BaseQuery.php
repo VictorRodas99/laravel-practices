@@ -23,10 +23,14 @@ class BaseQuery
         $this->independent_params = $independent_params;
     }
 
-    public static function paginate($items, $per_page = 5, $page = null, $options = [])
+    public function paginate(Iterable $items, $per_page = 5, $page = null, $options = [])
     {
+        $items = json_decode(json_encode($items), true); // Transform to array to convert from stdClass type
+
         $page = $page ?: (Paginator::resolveCurrentPage() ?: 1);
         $items = $items instanceof Collection ? $items : Collection::make($items);
+
+        $items = $items->mapInto($this->Model::class);
 
         return new LengthAwarePaginator(
             $items->forPage($page, $per_page),
@@ -42,8 +46,19 @@ class BaseQuery
             return [];
         }
 
+        // TODO: change this
+        $expected_params = [];
+        foreach ($allowed_params as $key => $value) {
+            if (gettype($key) === "integer") {
+                array_push($expected_params, $value);
+            } else {
+                array_push($expected_params, $key);
+            }
+        }
+
         $error_message = [
-            BaseQuery::ERROR => "Invalid params where given"
+            BaseQuery::ERROR => "Invalid params where given",
+            "expected params" => $expected_params
         ];
 
         $final_query = [];
@@ -136,9 +151,9 @@ class BaseQuery
         $final_values = array_map(fn ($value) => json_decode($value), $stringify_values);
 
         if (count($final_values) === 0) {
-            return [
+            return collect([
                 BaseQuery::NO_DATA => "No data"
-            ];
+            ]);
         }
 
         return collect($final_values);
