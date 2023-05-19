@@ -1,8 +1,8 @@
 <?php
 
+use App\Http\Controllers\Api\JWTAuthController;
 use App\Http\Controllers\Api\V1\CustomerController;
 use App\Http\Controllers\Api\V1\InvoiceController;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -16,11 +16,16 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
+Route::controller(JWTAuthController::class)->group(function () {
+    Route::post("login", "login");
+    Route::post("register", "register_user");
+    Route::get("logout", "logout");
 });
 
-Route::group(["prefix" => "v1"], function () {
+Route::group([
+    "middleware" => "auth:api",
+    "prefix" => "v1"
+], function () {
     Route::apiResource("customers", CustomerController::class);
     Route::apiResource("invoices", InvoiceController::class);
     Route::post("invoices/bulk", [InvoiceController::class, 'bulk_store']);
