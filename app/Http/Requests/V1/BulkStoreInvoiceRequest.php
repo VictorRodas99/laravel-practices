@@ -24,11 +24,11 @@ class BulkStoreInvoiceRequest extends FormRequest
     public function rules(): array
     {
         return [
-            "*.customerId" => ["required", "integer"],
+            "*.customer_id" => ["required", "integer"],
             "*.amount" => ["required", "numeric"],
             "*.status" => ["required", Rule::in(['B', 'b', 'P', 'p', 'V', 'v'])],
-            "*.billedDate" => ["required", "date_format:Y-m-d H:i:s"],
-            "*.paidDate" => ["date_format:Y-m-d H:i:s", "nullable"]
+            "*.billed_date" => ["required", "date_format:Y-m-d H:i:s"],
+            "*.paid_date" => ["date_format:Y-m-d H:i:s", "nullable"]
         ];
     }
 
