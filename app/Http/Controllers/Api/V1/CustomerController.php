@@ -75,7 +75,30 @@ class CustomerController extends Controller
      */
     public function update(UpdateCustomerRequest $request, Customer $customer)
     {
+        if (count(collect($customer)) === 0) {
+            return response()->json([
+                'message' => 'customer not found, please, provide id'
+            ], 402);
+        }
+
         $customer->update($request->all());
+        $updated_fields = collect(array_keys($request->all()))
+            ->filter(
+                fn ($field) => !str_contains($field, '_')
+            );
+
+        $final_message = "Customer $customer->id updated successfully!";
+
+        if ($request->method() === 'PATCH') {
+            return response()->json([
+                'message' => $final_message,
+                'updatedFields' => $updated_fields
+            ]);
+        }
+
+        return response()->json([
+            'message' => $final_message
+        ]);
     }
 
     /**
