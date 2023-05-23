@@ -52,6 +52,10 @@ class InvoiceController extends Controller
     public function bulk_store(BulkStoreInvoiceRequest $request)
     {
         Invoice::insert($request->all());
+
+        return response()->json([
+            'message' => "Invoice created!"
+        ]);
     }
 
     /**
@@ -83,6 +87,18 @@ class InvoiceController extends Controller
      */
     public function destroy(Invoice $invoice)
     {
-        //
+        if (count($invoice->toArray()) === 0) {
+            return response()->json([
+                'message' => 'invoice not found, please, provide an id'
+            ], 402);
+        }
+
+        $given_invoice_id = $invoice->id;
+
+        Invoice::destroy($given_invoice_id);
+
+        return response()->json([
+            'message' => "Invoice $given_invoice_id deleted!"
+        ]);
     }
 }
