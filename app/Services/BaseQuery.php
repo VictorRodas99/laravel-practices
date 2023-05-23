@@ -59,9 +59,18 @@ class BaseQuery
             $this->independent_params
         );
 
-        return count($final_query) === 0 && !$exists_independent_params
-            ? $error_message
-            : $final_query;
+        $exists_queries = count($final_query) > 0;
+        $exists_pagination = $request->query('page');
+
+        if (!$exists_queries && $exists_pagination) {
+            return [];
+        }
+
+        if (!$exists_queries && !$exists_independent_params) {
+            return $error_message;
+        }
+
+        return $final_query;
     }
 
     public function get_query_result(array $query): Collection
