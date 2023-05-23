@@ -106,6 +106,18 @@ class CustomerController extends Controller
      */
     public function destroy(Customer $customer)
     {
-        //
+        if (count($customer->toArray()) === 0) {
+            return response()->json([
+                'message' => 'customer not found, please, provide an id'
+            ], 402);
+        }
+
+        $given_customer_id = $customer->id;
+
+        Customer::destroy($given_customer_id);
+
+        return response()->json([
+            'message' => "Customer $given_customer_id deleted!"
+        ]);
     }
 }

@@ -33,7 +33,9 @@ Route::group([
     Route::apiResource("invoices", InvoiceController::class);
 
     Route::match(["put", "patch"], "customers", [CustomerController::class, 'update']);
+
     Route::delete("invoices", [InvoiceController::class, 'destroy']);
+    Route::delete("customers", [CustomerController::class, 'destroy']);
 
     Route::post("invoices/bulk", [InvoiceController::class, 'bulk_store']);
 });
