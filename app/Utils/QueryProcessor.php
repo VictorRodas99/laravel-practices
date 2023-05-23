@@ -28,10 +28,14 @@ class QueryProcessor
             $is_indexed_array = gettype($key) === 'integer';
             $valid_param = !$is_indexed_array ? $key : $value;
 
-            if ($valid_param !== 'page') {
-                $expected_params[] = $valid_param;
+            if ($valid_param === 'page') {
+                continue;
             }
+
+            $expected_params[] = $valid_param;
         }
+
+        return $expected_params;
     }
 
 
