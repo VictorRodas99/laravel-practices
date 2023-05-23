@@ -12,7 +12,7 @@ class JWTAuthController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth:api', ['except' => ['login', 'register_user']]);
+        $this->middleware('auth:api', ['except' => ['login', 'register_user', 'logout']]);
     }
 
     protected function get_token_response($token)
