@@ -1,0 +1,1004 @@
+openapi: 3.0.0
+info:
+  title: Laravel API - Practice
+  version: 1.0.0
+servers:
+  - url: http://localhost:8001
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+tags:
+  - name: Authentication
+  - name: Actions
+  - name: Actions > Customer
+  - name: Actions > Invoice
+paths:
+  /api/login:
+    post:
+      tags:
+        - Authentication
+      summary: Login
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                name: Usuario 1
+                email: usuario1@gmail.test.com
+                password: usuario1123
+      parameters:
+        - name: Accept
+          in: header
+          schema:
+            type: string
+          example: application/json
+      responses:
+        '200':
+          description: OK
+          headers:
+            Host:
+              schema:
+                type: string
+                example: localhost:8001
+            Date:
+              schema:
+                type: string
+                example: Sun, 21 May 2023 02:56:08 GMT
+            Connection:
+              schema:
+                type: string
+                example: close
+            X-Powered-By:
+              schema:
+                type: string
+                example: PHP/8.1.18
+            Cache-Control:
+              schema:
+                type: string
+                example: no-cache, private
+            Content-Type:
+              schema:
+                type: string
+                example: application/json
+            X-RateLimit-Limit:
+              schema:
+                type: integer
+                example: '60'
+            X-RateLimit-Remaining:
+              schema:
+                type: integer
+                example: '58'
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+                example: '*'
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                user:
+                  id: 1
+                  name: Usuario 1
+                  email: usuario1@gmail.test.com
+                  email_verified_at: null
+                  created_at: '2023-05-19T18:41:05.000000Z'
+                  updated_at: '2023-05-19T18:41:05.000000Z'
+                authorization:
+                  accessToken: <your-generated-token-here>
+                  tokenType: bearer
+                  expiresIn: 3600
+  /api/logout:
+    get:
+      tags:
+        - Authentication
+      summary: Logout
+      parameters:
+        - name: Accept
+          in: header
+          schema:
+            type: string
+          example: application/json
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /api/register:
+    post:
+      tags:
+        - Authentication
+      summary: Register
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                name: Usuario 3
+                email: usuario3@gmail.com
+                password: usuario3123
+      parameters:
+        - name: Accept
+          in: header
+          schema:
+            type: string
+          example: application/json
+      responses:
+        '200':
+          description: OK
+          headers:
+            Host:
+              schema:
+                type: string
+                example: localhost:8001
+            Date:
+              schema:
+                type: string
+                example: Sun, 21 May 2023 03:02:05 GMT
+            Connection:
+              schema:
+                type: string
+                example: close
+            X-Powered-By:
+              schema:
+                type: string
+                example: PHP/8.1.18
+            Cache-Control:
+              schema:
+                type: string
+                example: no-cache, private
+            Content-Type:
+              schema:
+                type: string
+                example: application/json
+            X-RateLimit-Limit:
+              schema:
+                type: integer
+                example: '60'
+            X-RateLimit-Remaining:
+              schema:
+                type: integer
+                example: '59'
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+                example: '*'
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                message: User created successfully
+                user:
+                  name: Usuario 3
+                  email: usuario3@gmail.com
+                  updated_at: '2023-05-21T03:02:05.000000Z'
+                  created_at: '2023-05-21T03:02:05.000000Z'
+                  id: 3
+  /api/v1/customers:
+    get:
+      tags:
+        - Actions > Customer
+      summary: Get Customer by query
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: Accept
+          in: header
+          schema:
+            type: string
+          example: application/json
+        - name: name
+          in: query
+          schema:
+            type: string
+          description: (Required) Customer name
+          example: <string>
+      responses:
+        '200':
+          description: OK
+          headers:
+            Host:
+              schema:
+                type: string
+                example: localhost:8001
+            Date:
+              schema:
+                type: string
+                example: Mon, 22 May 2023 14:38:44 GMT
+            Connection:
+              schema:
+                type: string
+                example: close
+            X-Powered-By:
+              schema:
+                type: string
+                example: PHP/8.1.18
+            Cache-Control:
+              schema:
+                type: string
+                example: no-cache, private
+            Content-Type:
+              schema:
+                type: string
+                example: application/json
+            X-RateLimit-Limit:
+              schema:
+                type: integer
+                example: '60'
+            X-RateLimit-Remaining:
+              schema:
+                type: integer
+                example: '58'
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+                example: '*'
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                data:
+                  - id: 181
+                    name: Jeremy Parker
+                    type: B
+                    email: swirlies@gmail.com
+                    adress: somewhere bro... I don't really know
+                    city: Somewhere too!
+                    state: Some state
+                    postalCode: '9492034'
+                links:
+                  first: /?page=1
+                  last: /?page=1
+                  prev: null
+                  next: null
+                meta:
+                  current_page: 1
+                  from: 1
+                  last_page: 1
+                  links:
+                    - url: null
+                      label: '&laquo; Previous'
+                      active: false
+                    - url: /?page=1
+                      label: '1'
+                      active: true
+                    - url: null
+                      label: Next &raquo;
+                      active: false
+                  path: /
+                  per_page: 5
+                  to: 1
+                  total: 1
+    post:
+      tags:
+        - Actions > Customer
+      summary: Create Customer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                name: New Customer
+                type: I
+                email: customer1@gmail.com
+                adress: some random adress
+                city: city 1
+                state: state 1
+                postalCode: '942039'
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: Accept
+          in: header
+          schema:
+            type: string
+          example: application/json
+      responses:
+        '201':
+          description: Created
+          headers:
+            Host:
+              schema:
+                type: string
+                example: localhost:8001
+            Date:
+              schema:
+                type: string
+                example: Mon, 22 May 2023 15:46:11 GMT
+            Connection:
+              schema:
+                type: string
+                example: close
+            X-Powered-By:
+              schema:
+                type: string
+                example: PHP/8.1.18
+            Cache-Control:
+              schema:
+                type: string
+                example: no-cache, private
+            Content-Type:
+              schema:
+                type: string
+                example: application/json
+            X-RateLimit-Limit:
+              schema:
+                type: integer
+                example: '60'
+            X-RateLimit-Remaining:
+              schema:
+                type: integer
+                example: '59'
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+                example: '*'
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                data:
+                  id: 182
+                  name: New Customer
+                  type: I
+                  email: customer1@gmail.com
+                  adress: some random adress
+                  city: city 1
+                  state: state 1
+                  postalCode: '942039'
+  /api/v1/customers/{id}:
+    get:
+      tags:
+        - Actions > Customer
+      summary: Get Customer by ID
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: Accept
+          in: header
+          schema:
+            type: string
+          example: application/json
+        - name: id
+          in: path
+          schema:
+            type: integer
+          required: true
+          example: '1'
+      responses:
+        '200':
+          description: OK
+          headers:
+            Host:
+              schema:
+                type: string
+                example: localhost:8001
+            Date:
+              schema:
+                type: string
+                example: Mon, 22 May 2023 14:29:26 GMT
+            Connection:
+              schema:
+                type: string
+                example: close
+            X-Powered-By:
+              schema:
+                type: string
+                example: PHP/8.1.18
+            Cache-Control:
+              schema:
+                type: string
+                example: no-cache, private
+            Content-Type:
+              schema:
+                type: string
+                example: application/json
+            X-RateLimit-Limit:
+              schema:
+                type: integer
+                example: '60'
+            X-RateLimit-Remaining:
+              schema:
+                type: integer
+                example: '57'
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+                example: '*'
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                data:
+                  id: 1
+                  name: Lueilwitz Group
+                  type: B
+                  email: nico72@yahoo.com
+                  adress: 5334 Richie Isle
+                  city: Alysonmouth
+                  state: Pennsylvania
+                  postalCode: '14368'
+    patch:
+      tags:
+        - Actions > Customer
+      summary: Update Customer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                city: New city
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: Accept
+          in: header
+          schema:
+            type: string
+          example: application/json
+        - name: id
+          in: path
+          schema:
+            type: string
+          required: true
+          description: Customer Id
+          example: <number>
+      responses:
+        '200':
+          description: OK
+          headers:
+            Host:
+              schema:
+                type: string
+                example: localhost:8001
+            Date:
+              schema:
+                type: string
+                example: Mon, 22 May 2023 19:07:52 GMT
+            Connection:
+              schema:
+                type: string
+                example: close
+            X-Powered-By:
+              schema:
+                type: string
+                example: PHP/8.1.18
+            Cache-Control:
+              schema:
+                type: string
+                example: no-cache, private
+            Content-Type:
+              schema:
+                type: string
+                example: application/json
+            X-RateLimit-Limit:
+              schema:
+                type: integer
+                example: '60'
+            X-RateLimit-Remaining:
+              schema:
+                type: integer
+                example: '59'
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+                example: '*'
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                message: Customer 181 updated successfully!
+                updatedFields:
+                  - city
+    put:
+      tags:
+        - Actions > Customer
+      summary: Update Customer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                name: New Customer (update)
+                type: I
+                email: newcustomer@gmail.com
+                adress: some random adress
+                city: new city 2
+                state: new state
+                postalCode: '25324'
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: Accept
+          in: header
+          schema:
+            type: string
+          example: application/json
+        - name: id
+          in: path
+          schema:
+            type: string
+          required: true
+          description: Customer Id
+          example: <number>
+      responses:
+        '200':
+          description: OK
+          headers:
+            Host:
+              schema:
+                type: string
+                example: localhost:8001
+            Date:
+              schema:
+                type: string
+                example: Mon, 22 May 2023 19:15:53 GMT
+            Connection:
+              schema:
+                type: string
+                example: close
+            X-Powered-By:
+              schema:
+                type: string
+                example: PHP/8.1.18
+            Cache-Control:
+              schema:
+                type: string
+                example: no-cache, private
+            Content-Type:
+              schema:
+                type: string
+                example: application/json
+            X-RateLimit-Limit:
+              schema:
+                type: integer
+                example: '60'
+            X-RateLimit-Remaining:
+              schema:
+                type: integer
+                example: '59'
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+                example: '*'
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                message: Customer 182 updated successfully!
+    delete:
+      tags:
+        - Actions > Customer
+      summary: Delete Customer
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: Accept
+          in: header
+          schema:
+            type: string
+          example: application/json
+        - name: id
+          in: path
+          schema:
+            type: string
+          required: true
+          description: (Required) Customer Id
+          example: <number>
+      responses:
+        '200':
+          description: OK
+          headers:
+            Host:
+              schema:
+                type: string
+                example: localhost:8001
+            Date:
+              schema:
+                type: string
+                example: Tue, 23 May 2023 17:52:27 GMT
+            Connection:
+              schema:
+                type: string
+                example: close
+            X-Powered-By:
+              schema:
+                type: string
+                example: PHP/8.1.18
+            Cache-Control:
+              schema:
+                type: string
+                example: no-cache, private
+            Content-Type:
+              schema:
+                type: string
+                example: application/json
+            X-RateLimit-Limit:
+              schema:
+                type: integer
+                example: '60'
+            X-RateLimit-Remaining:
+              schema:
+                type: integer
+                example: '56'
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+                example: '*'
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                message: Customer 183 deleted!
+  /api/v1/invoices:
+    get:
+      tags:
+        - Actions > Invoice
+      summary: Get Invoices by status
+      parameters:
+        - name: Accept
+          in: header
+          schema:
+            type: string
+          example: application/json
+        - name: status
+          in: query
+          schema:
+            type: string
+          description: (Required) Invoice status (B, P or V)
+          example: <char>
+      responses:
+        '200':
+          description: OK
+          headers:
+            Host:
+              schema:
+                type: string
+                example: localhost:8001
+            Date:
+              schema:
+                type: string
+                example: Mon, 22 May 2023 15:34:51 GMT
+            Connection:
+              schema:
+                type: string
+                example: close
+            X-Powered-By:
+              schema:
+                type: string
+                example: PHP/8.1.18
+            Cache-Control:
+              schema:
+                type: string
+                example: no-cache, private
+            Content-Type:
+              schema:
+                type: string
+                example: application/json
+            X-RateLimit-Limit:
+              schema:
+                type: integer
+                example: '60'
+            X-RateLimit-Remaining:
+              schema:
+                type: integer
+                example: '59'
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+                example: '*'
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                data:
+                  - id: 2
+                    customerId: 1
+                    amount: 609
+                    status: P
+                    billedDate: '2018-07-01 11:54:53'
+                    paidDate: '2017-02-19 22:07:33'
+                  - id: 6
+                    customerId: 1
+                    amount: 12716
+                    status: P
+                    billedDate: '2016-08-05 11:16:05'
+                    paidDate: '2014-12-30 19:39:48'
+                  - id: 12
+                    customerId: 2
+                    amount: 17830
+                    status: P
+                    billedDate: '2019-10-07 09:59:03'
+                    paidDate: '2017-12-25 23:35:39'
+                  - id: 13
+                    customerId: 2
+                    amount: 10038
+                    status: P
+                    billedDate: '2017-06-24 13:16:49'
+                    paidDate: '2018-07-29 07:43:38'
+                  - id: 17
+                    customerId: 2
+                    amount: 16921
+                    status: P
+                    billedDate: '2016-03-08 03:03:56'
+                    paidDate: '2021-04-30 19:10:59'
+                links:
+                  first: /?page=1
+                  last: /?page=61
+                  prev: null
+                  next: /?page=2
+                meta:
+                  current_page: 1
+                  from: 1
+                  last_page: 61
+                  links:
+                    - url: null
+                      label: '&laquo; Previous'
+                      active: false
+                    - url: /?page=1
+                      label: '1'
+                      active: true
+                    - url: /?page=2
+                      label: '2'
+                      active: false
+                    - url: /?page=3
+                      label: '3'
+                      active: false
+                    - url: /?page=4
+                      label: '4'
+                      active: false
+                    - url: /?page=5
+                      label: '5'
+                      active: false
+                    - url: /?page=6
+                      label: '6'
+                      active: false
+                    - url: /?page=7
+                      label: '7'
+                      active: false
+                    - url: /?page=8
+                      label: '8'
+                      active: false
+                    - url: /?page=9
+                      label: '9'
+                      active: false
+                    - url: /?page=10
+                      label: '10'
+                      active: false
+                    - url: null
+                      label: ...
+                      active: false
+                    - url: /?page=60
+                      label: '60'
+                      active: false
+                    - url: /?page=61
+                      label: '61'
+                      active: false
+                    - url: /?page=2
+                      label: Next &raquo;
+                      active: false
+                  path: /
+                  per_page: 5
+                  to: 5
+                  total: 302
+  /api/v1/invoices/{id}:
+    get:
+      tags:
+        - Actions > Invoice
+      summary: Get Invoice by id
+      parameters:
+        - name: Accept
+          in: header
+          schema:
+            type: string
+          example: application/json
+        - name: id
+          in: path
+          schema:
+            type: string
+          required: true
+          description: Customer Id
+          example: <number>
+      responses:
+        '200':
+          description: OK
+          headers:
+            Host:
+              schema:
+                type: string
+                example: localhost:8001
+            Date:
+              schema:
+                type: string
+                example: Mon, 22 May 2023 15:25:36 GMT
+            Connection:
+              schema:
+                type: string
+                example: close
+            X-Powered-By:
+              schema:
+                type: string
+                example: PHP/8.1.18
+            Cache-Control:
+              schema:
+                type: string
+                example: no-cache, private
+            Content-Type:
+              schema:
+                type: string
+                example: application/json
+            X-RateLimit-Limit:
+              schema:
+                type: integer
+                example: '60'
+            X-RateLimit-Remaining:
+              schema:
+                type: integer
+                example: '59'
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+                example: '*'
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                data:
+                  id: 1
+                  customerId: 1
+                  amount: 19828
+                  status: V
+                  billedDate: '2019-09-15 18:08:30'
+                  paidDate: null
+    delete:
+      tags:
+        - Actions > Invoice
+      summary: Delete Invoice
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: Accept
+          in: header
+          schema:
+            type: string
+          example: application/json
+        - name: id
+          in: path
+          schema:
+            type: string
+          required: true
+          description: (Required) Invoice Id
+          example: <number>
+      responses:
+        '200':
+          description: OK
+          headers:
+            Host:
+              schema:
+                type: string
+                example: localhost:8001
+            Date:
+              schema:
+                type: string
+                example: Tue, 23 May 2023 17:37:56 GMT
+            Connection:
+              schema:
+                type: string
+                example: close
+            X-Powered-By:
+              schema:
+                type: string
+                example: PHP/8.1.18
+            Cache-Control:
+              schema:
+                type: string
+                example: no-cache, private
+            Content-Type:
+              schema:
+                type: string
+                example: application/json
+            X-RateLimit-Limit:
+              schema:
+                type: integer
+                example: '60'
+            X-RateLimit-Remaining:
+              schema:
+                type: integer
+                example: '58'
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+                example: '*'
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                message: Invoice 905 deleted!
+  /api/v1/invoices/bulk:
+    post:
+      tags:
+        - Actions > Invoice
+      summary: Add Invoices
+      description: >-
+        Allows to create several invoices in a single request using an array of
+        objects
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                - customerId: 1
+                  amount: 1349
+                  status: V
+                  billedDate: '2020-09-15 18:08:30'
+                  paidDate: null
+      parameters:
+        - name: Accept
+          in: header
+          schema:
+            type: string
+          example: application/json
+      responses:
+        '200':
+          description: OK
+          headers:
+            Host:
+              schema:
+                type: string
+                example: localhost:8001
+            Date:
+              schema:
+                type: string
+                example: Mon, 22 May 2023 23:25:57 GMT
+            Connection:
+              schema:
+                type: string
+                example: close
+            X-Powered-By:
+              schema:
+                type: string
+                example: PHP/8.1.18
+            Cache-Control:
+              schema:
+                type: string
+                example: no-cache, private
+            Content-Type:
+              schema:
+                type: string
+                example: application/json
+            X-RateLimit-Limit:
+              schema:
+                type: integer
+                example: '60'
+            X-RateLimit-Remaining:
+              schema:
+                type: integer
+                example: '58'
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+                example: '*'
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                message: Invoice created!
