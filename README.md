@@ -35,7 +35,7 @@ git clone https://github.com/VictorRodas99/laravel-practices.git
 cd laravel-practices/
 ```
 
-3. Create a database and create and .env file based on .env.example
+3. Create a database and create an .env file based on .env.example
 
 Edit the .env file with this:
 
