@@ -16,6 +16,9 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+Route::get('/', fn () => response()->json(['message' => 'Welcome!']));
+
+
 Route::controller(JWTAuthController::class)->group(function () {
     Route::post("login", "login");
     Route::post("register", "register_user");
@@ -28,5 +31,9 @@ Route::group([
 ], function () {
     Route::apiResource("customers", CustomerController::class);
     Route::apiResource("invoices", InvoiceController::class);
+
+    Route::match(["put", "patch"], "customers", [CustomerController::class, 'update']);
+    Route::delete("invoices", [InvoiceController::class, 'destroy']);
+
     Route::post("invoices/bulk", [InvoiceController::class, 'bulk_store']);
 });
